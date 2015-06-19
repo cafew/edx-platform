@@ -437,6 +437,8 @@ class EnrollmentListView(APIView, ApiKeyPermissionMixIn):
                     }
                 )
 
+            enrollment_attributes = request.DATA.get('enrollment_attributes')
+            provider_id = self.get(enrollment_attributes)
             enrollment = api.get_enrollment(username, unicode(course_id))
             mode_changed = enrollment and mode is not None and enrollment['mode'] != mode
             active_changed = enrollment and is_active is not None and enrollment['is_active'] != is_active
@@ -450,7 +452,17 @@ class EnrollmentListView(APIView, ApiKeyPermissionMixIn):
                     )
                     log.warning(msg)
                     return Response(status=status.HTTP_400_BAD_REQUEST, data={"message": msg})
-                response = api.update_enrollment(username, unicode(course_id), mode=mode, is_active=is_active)
+                if mode_changed and active_changed and mode == 'credit' and not not provider_id:
+                    msg = u"provider_id is missing from enrollment in credit mode:"
+                    log.warning(msg)
+                    return Response(status=status.HTTP_400_BAD_REQUEST, data={"message": msg})
+                response = api.update_enrollment(
+                    username,
+                    unicode(course_id),
+                    mode=mode,
+                    is_active=is_active,
+                    enrollment_attributes=enrollment_attributes
+                )
             else:
                 # Will reactivate inactive enrollments.
                 response = api.add_enrollment(username, unicode(course_id), mode=mode, is_active=is_active)
