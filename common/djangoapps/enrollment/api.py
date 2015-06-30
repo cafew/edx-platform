@@ -327,8 +327,7 @@ def set_enrollment_attributes(user_id, course_id, attributes):
             ]
         )
     """
-    _data_api().add_or_update_enrollment_attr()
-
+    _data_api().add_or_update_enrollment_attr(user_id, course_id, attributes)
 
 
 def _validate_course_mode(course_id, mode):

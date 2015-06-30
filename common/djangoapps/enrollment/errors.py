@@ -51,6 +51,7 @@ class EnrollmentApiLoadError(CourseEnrollmentError):
     """The data API could not be loaded."""
     pass
 
+
 class InvalidEnrollmentAttributes(CourseEnrollmentError):
     """Enrollment Attributes could not be validated"""
     pass

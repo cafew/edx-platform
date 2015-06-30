@@ -438,7 +438,7 @@ class EnrollmentListView(APIView, ApiKeyPermissionMixIn):
                 )
 
             enrollment_attributes = request.DATA.get('enrollment_attributes')
-            provider_id = self.get(enrollment_attributes)
+            provider_id = self._get_provider_id(enrollment_attributes)
             enrollment = api.get_enrollment(username, unicode(course_id))
             mode_changed = enrollment and mode is not None and enrollment['mode'] != mode
             active_changed = enrollment and is_active is not None and enrollment['is_active'] != is_active
@@ -501,3 +501,11 @@ class EnrollmentListView(APIView, ApiKeyPermissionMixIn):
                     ).format(username=username, course_id=course_id)
                 }
             )
+
+    def _get_provider_id(self, enrollment_attributes):
+        provider_id = None
+        if enrollment_attributes:
+            for attr in enrollment_attributes:
+                if attr.get('namespace') == 'credit' and attr.get('name') == 'provider_id':
+                    provider_id = attr.get('value')
+        return provider_id

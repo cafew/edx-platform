@@ -1888,6 +1888,7 @@ class CourseEnrollmentAttribute(models.Model):
             }
             for attribute in cls.objects.filter(enrollment=enrollment)
         ]
+
     @classmethod
     def get_enrollment_attribute(cls, enrollment, namespace, name):
         """Get 'CourseEnrollmentAttribute' object for given enrollment,
