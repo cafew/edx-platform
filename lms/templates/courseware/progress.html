@@ -28,6 +28,7 @@ from django.utils.http import urlquote_plus
 <script type="text/javascript" src="${static.url('js/courseware/credit_progress.js')}"></script>
 <script>
   ${progress_graph.body(grade_summary, course.grade_cutoffs, "grade-detail-graph", not course.no_grade, not course.no_grade)}
+  window.location.href = "${settings.CREDIT_HELP_LINK_URL}"
 </script>
 </%block>
 
@@ -118,7 +119,7 @@ from django.utils.http import urlquote_plus
                 %elif credit_course_requirements['eligibility_status'] == 'partial_eligible':
                     <span>${student.get_full_name()}, ${_("You have not yet met the requirements for credit.")}</span>
                 %endif
-                <button class="credit-help"><i class="fa fa-question"></i><span class="sr">Help regarding credit requirement</span></button><br>
+                <button class="credit-help" onclick="redirect_to_credit_help()"><i class="fa fa-question"></i><span class="sr">Help regarding credit requirement</span></button><br>
                 <div class="requirement-container" data-eligible="${credit_course_requirements['eligibility_status']}">
                 %for namespace in credit_course_requirements['requirements']:
                     %for requirement in credit_course_requirements['requirements'][namespace]:
